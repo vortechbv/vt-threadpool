@@ -16,6 +16,7 @@ Member functions
 ---------------------------------------------------------- | -------------------
 [(constructor)](constructor.md#top)                        | constructs the thread pool
 [(destructor)](destructor.md#top)                          | destructs the thread pool
+operator=[deleted]                                         | not copy-assignable
 [run](run.md#top)                                          | runs work on the thread pool
 [parfor<br>parfor_static<br>parfor_dynamic](parfor.md#top) | runs a loop in parallel
 [size](size.md#top)                                        | returns the number of threads

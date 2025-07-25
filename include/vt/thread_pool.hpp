@@ -41,11 +41,8 @@ public:
 #endif
 
     explicit thread_pool(std::size_t thread_count);
-    thread_pool(thread_pool&&) = default;
 
     ~thread_pool();
-
-    thread_pool& operator=(thread_pool&&) = default;
 
     template<typename Func, typename... Args>
     std::future<std::invoke_result_t<Func, Args...>> run(
