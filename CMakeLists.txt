@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 VORtech b.v.
+# Copyright (c) 2017-2025 VORtech b.v.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,9 +33,15 @@ option(VT_ENABLE_TESTING "Build the test-suite" ON)
 option(VT_ENABLE_INSTALL "Enable installation of header files and libraries" ON)
 option(VT_POSITION_INDEPENDENT_CODE "PIC option for library" ON)
 
+if(CMAKE_CXX_STANDARD AND "${CMAKE_CXX_STANDARD}" GREATER 17)
+    set(VT_CXX_STD_DEFAULT ${CMAKE_CXX_STANDARD})
+else()
+    set(VT_CXX_STD_DEFAULT 17)
+endif()
+
 set(
     VT_CXX_STD
-    17
+    ${VT_CXX_STD_DEFAULT}
     CACHE
     STRING
     "C++ standard this library should use."

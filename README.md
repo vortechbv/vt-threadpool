@@ -35,6 +35,8 @@ FetchContent_MakeAvailable(vt-threadpool)
 target_link_libraries(<your-target> vt::threadpool)
 ```
 
+The library internals can use more efficient standard library components if C++20 or C++23 is available. The C++ standard used can be configured through the `CMAKE_CXX_STANDARD` or `VT_CXX_STD` flag. The default is `17`.
+
 A reference section containing documentation of the API and usage examples can be found [here](doc/vt/threadpool/readme.md#top).
 
 For maintainers
