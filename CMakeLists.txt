@@ -110,6 +110,7 @@ set(
     -Wno-c++98-compat-pedantic
     -Wno-missing-braces
     -Wno-padded
+    "-Wno-#pragma-messages"
 )
 
 set(
