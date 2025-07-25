@@ -12,8 +12,8 @@ Getting started
 
 The library uses C++17 features and assumes a C++17 compliant compiler. Compatibility with the following compilers is tested:
 
-- GCC 10.5
-- Clang 13.0
+- GCC 10.5, 12.3 and 14.2
+- Clang 13.0, 16.0 and 18.1
 - MSVC vs2022
 
 If you're using CMake, you can include this library in your project using `FetchContent` as follows:

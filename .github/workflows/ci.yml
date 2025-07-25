@@ -12,10 +12,28 @@ jobs:
           - os: ubuntu-22.04
             build_type: Release
             compiler: g++-10
+            cxx_std: 17
+          - os: ubuntu-24.04
+            build_type: Release
+            compiler: g++-12
+            cxx_std: 20
+          - os: ubuntu-24.04
+            build_type: Release
+            compiler: g++-14
+            cxx_std: 23
 
           - os: ubuntu-22.04
             build_type: Release
             compiler: clang++-13
+            cxx_std: 17
+          - os: ubuntu-24.04
+            build_type: Release
+            compiler: clang++-16
+            cxx_std: 20
+          - os: ubuntu-24.04
+            build_type: Release
+            compiler: clang++-18
+            cxx_std: 23
 
           - os: windows-2022
             build_type: Release
@@ -39,6 +57,7 @@ jobs:
           cmake
           -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DVT_CXX_STD=${{ matrix.cxx_std }}
           -B ${{ github.workspace }}/build
           -S ${{ github.workspace }}
 
