@@ -53,6 +53,13 @@ public:
         Args&&... args
     ) const;
 
+    template<typename Body>
+    void parfor(std::size_t n, Body&& body) const;
+    template<typename Body>
+    void parfor_static(std::size_t n, Body&& body) const;
+    template<typename Body>
+    void parfor_dynamic(std::size_t n, Body&& body) const;
+
     std::size_t size() const noexcept;
 
 private:

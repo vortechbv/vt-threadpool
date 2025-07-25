@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2025 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,52 @@ TEST_CASE(
     std::future<void> fut = threads.run([] { throw std::runtime_error{""}; });
 
     REQUIRE_THROWS_AS(fut.get(), std::runtime_error);
+}
+
+
+TEST_CASE(
+    "A vt::thread_pool can run a loop in parallel using a static schedule",
+    "[thread_pool]"
+) {
+    vt::thread_pool threads{3};
+
+    std::vector<int> x = { 3, 1, 4, 1, 5, 9, 2 };
+
+    threads.parfor_static(x.size(), [&](std::size_t i) {
+        x[i] *= 2;
+    });
+
+    REQUIRE(x == std::vector<int>{6, 2, 8, 2, 10, 18, 4});
+}
+
+
+TEST_CASE(
+    "A vt::thread_pool can run a loop in parallel using a dynamic schedule",
+    "[thread_pool]"
+) {
+    vt::thread_pool threads{3};
+
+    std::vector<int> x = { 3, 1, 4, 1, 5 };
+
+    threads.parfor_dynamic(x.size(), [&](std::size_t i) {
+        x[i] *= 2;
+    });
+
+    REQUIRE(x == std::vector<int>{6, 2, 8, 2, 10});
+}
+
+
+TEST_CASE(
+    "Exceptions in a vt::thread_pool parallel loop propagate back to the "
+    "calling thread"
+    "[thread_pool]"
+) {
+    vt::thread_pool threads{1};
+
+    REQUIRE_THROWS_AS(
+        threads.parfor(1, [](std::size_t) { throw std::runtime_error{""}; }),
+        std::runtime_error
+    );
 }
 
 

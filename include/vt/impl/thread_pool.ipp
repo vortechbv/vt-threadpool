@@ -66,6 +66,47 @@ std::future<std::invoke_result_t<Func, Args...>> thread_pool::run(
 }
 
 
+template<typename Body>
+void thread_pool::parfor(std::size_t n, Body&& body) const {
+    const std::size_t nthread = this->size();
+
+    std::vector<std::future<void>> signals;
+    signals.reserve(nthread);
+
+    for (std::size_t ithread = 0; ithread < nthread; ++ithread) {
+        signals.push_back(
+            this->run([ithread, nthread, n, &body] {
+                const std::size_t start = ithread * n / nthread;
+                const std::size_t end = (ithread + 1) * n / nthread;
+
+                for (std::size_t i = start; i < end; ++i) body(i);
+            })
+        );
+    }
+
+    for (std::future<void>& signal : signals) signal.get();
+}
+
+
+template<typename Body>
+void thread_pool::parfor_static(std::size_t n, Body&& body) const {
+    this->parfor(n, std::forward<Body>(body));
+}
+
+
+template<typename Body>
+void thread_pool::parfor_dynamic(std::size_t n, Body&& body) const {
+    std::vector<std::future<void>> signals;
+    signals.reserve(n);
+
+    for (std::size_t i = 0; i < n; ++i) {
+        signals.push_back(this->run([i, &body] { body(i); }));
+    }
+
+    for (std::future<void>& signal : signals) signal.get();
+}
+
+
 inline std::size_t thread_pool::size() const noexcept {
     return _workers.size();
 }
