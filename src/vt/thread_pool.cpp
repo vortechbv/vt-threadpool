@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2025 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,9 @@ namespace vt {
 
 namespace {
 
-void worker_main(channel<std::function<void()>>& from_pool) {
+void worker_main(channel<thread_pool::function_type>& from_pool) {
     while (true) {
-        std::function<void()> work = from_pool.recv();
+        thread_pool::function_type work = from_pool.recv();
         if (!work) break;
 
         work();

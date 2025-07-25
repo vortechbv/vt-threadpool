@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2025 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,13 @@ namespace vt {
 
 class thread_pool {
 public:
+#ifdef __cpp_lib_move_only_function
+    using function_type = std::move_only_function<void()>;
+#else
+#   pragma message "std::move_only_function unavailable, using std::function"
+    using function_type = std::function<void()>;
+#endif
+
     explicit thread_pool(std::size_t thread_count);
     thread_pool(thread_pool&&) = default;
 
@@ -49,7 +56,7 @@ public:
     std::size_t size() const noexcept;
 
 private:
-    mutable channel<std::function<void()>> _to_workers;
+    mutable channel<function_type> _to_workers;
     std::vector<std::thread> _workers;
 };
 

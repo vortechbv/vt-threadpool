@@ -40,10 +40,21 @@ std::future<std::invoke_result_t<Func, Args...>> thread_pool::run(
     Func&& f,
     Args&&... args
 ) const {
-    using task_type = std::packaged_task<std::result_of_t<Func(Args...)>()>;
+    using task_type = std::packaged_task<std::invoke_result_t<Func, Args...>()>;
 
-    // Using a shared pointer, since std::function apparently needs to make a
-    // copy at some point.
+#ifdef __cpp_lib_move_only_function
+    task_type task(
+        VT_THREAD_POOL_BIND(std::forward<Func>(f), std::forward<Args>(args)...)
+    );
+    std::future<std::invoke_result_t<Func, Args...>> fut = task.get_future();
+
+    _to_workers.send(std::move(task));
+
+    return fut;
+#else
+    // If we don't have std::move_only_function, we need to wrap the
+    // std::packaged_task in a std::shared_ptr and lambda, since std::function
+    // must be copyable.
     auto task = std::make_shared<task_type>(
         VT_THREAD_POOL_BIND(std::forward<Func>(f), std::forward<Args>(args)...)
     );
@@ -51,6 +62,7 @@ std::future<std::invoke_result_t<Func, Args...>> thread_pool::run(
     _to_workers.send([task] { (*task)(); });
 
     return task->get_future();
+#endif
 }
 
 
