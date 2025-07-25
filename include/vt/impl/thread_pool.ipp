@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 VORtech b.v.
+// Copyright (c) 2017-2025 VORtech b.v.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,14 @@
 #include <vector>
 
 
+#ifdef __cpp_lib_bind_front
+#   define VT_THREAD_POOL_BIND std::bind_front
+#else
+#   pragma message "std::bind_front unavailable, using std::bind"
+#   define VT_THREAD_POOL_BIND std::bind
+#endif
+
+
 namespace vt {
 
 template<typename Func, typename... Args>
@@ -32,15 +40,13 @@ std::future<std::invoke_result_t<Func, Args...>> thread_pool::run(
     Func&& f,
     Args&&... args
 ) const {
-    // TODO: For the case where there are no arguments, we can skip the call to
-    // std::bind(). Would that improve performance?
-
     using task_type = std::packaged_task<std::result_of_t<Func(Args...)>()>;
 
     // Using a shared pointer, since std::function apparently needs to make a
     // copy at some point.
     auto task = std::make_shared<task_type>(
-        std::bind(std::forward<Func>(f), std::forward<Args>(args)...));
+        VT_THREAD_POOL_BIND(std::forward<Func>(f), std::forward<Args>(args)...)
+    );
 
     _to_workers.send([task] { (*task)(); });
 
