@@ -24,6 +24,7 @@ Member functions
 |||
 ----------------------------------- | ----------------------
 [(constructor)](constructor.md#top) | constructs the channel
+operator=[deleted]                  | not copy-assignable
 [send](send.md#top)                 | sends a message
 [recv<br>try_recv](recv.md#top)     | receives a message
 [clear](clear.md#top)               | removes messages
