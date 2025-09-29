@@ -95,7 +95,9 @@ TEST_CASE(
     vt::thread_pool threads{1};
 
     REQUIRE_THROWS_AS(
-        threads.parfor(1, [](std::size_t) { throw std::runtime_error{""}; }),
+        threads.parfor(2, [](std::size_t i) {
+            if (i > 0) throw std::runtime_error{""};
+        }),
         std::runtime_error
     );
 }
