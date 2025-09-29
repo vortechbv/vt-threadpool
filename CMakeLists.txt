@@ -78,6 +78,17 @@ if(VT_ENABLE_TESTING)
     )
 
     FetchContent_MakeAvailable(Catch2)
+
+    get_target_property(
+        CATCH2_INCLUDE_DIRS
+        Catch2
+        INTERFACE_INCLUDE_DIRECTORIES
+    )
+    set_target_properties(
+        Catch2
+        PROPERTIES
+            INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${CATCH2_INCLUDE_DIRS}"
+    )
 endif()
 
 
