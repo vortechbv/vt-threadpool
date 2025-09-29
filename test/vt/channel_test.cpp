@@ -22,6 +22,7 @@
 
 #include <catch2/catch_all.hpp>
 #include <algorithm>
+#include <array>
 #include <memory>
 #include <thread>
 
@@ -82,17 +83,17 @@ TEST_CASE(
     "A vt::channel can have multiple producers and consumers",
     "[channel]"
 ) {
-    vt::channel<int> chan;
-    bool recved[4 * 1024] = {};
+    vt::channel<std::size_t> chan;
+    std::array<bool, 4 * 1024> recved = {};
 
-    auto produce = [&](int start) {
-        for (int i = start; i < start + 1024; ++i) {
+    auto produce = [&](std::size_t start) {
+        for (std::size_t i = start; i < start + 1024; ++i) {
             chan.send(i);
         }
     };
 
     auto consume = [&] {
-        for (int i = 0; i < 1024; ++i) {
+        for (std::size_t i = 0; i < 1024; ++i) {
             recved[chan.recv()] = true;
         }
     };
