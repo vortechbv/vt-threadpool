@@ -32,6 +32,7 @@ include(GNUInstallDirs)
 option(VT_ENABLE_TESTING "Build the test-suite" ON)
 option(VT_ENABLE_INSTALL "Enable installation of header files and libraries" ON)
 option(VT_POSITION_INDEPENDENT_CODE "PIC option for library" ON)
+option(VT_ENABLE_WERROR "Enabled -Werror flag" OFF)
 
 if(CMAKE_CXX_STANDARD AND "${CMAKE_CXX_STANDARD}" GREATER 17)
     set(VT_CXX_STD_DEFAULT ${CMAKE_CXX_STANDARD})
@@ -97,6 +98,7 @@ endif()
 
 set(
     VT_THREADPOOL_GNU_COMPILE_OPTIONS
+    $<$<BOOL:${VT_ENABLE_WERROR}>:-Werror>
     -pedantic-errors
     -Wall
     -Wextra
@@ -115,6 +117,7 @@ set(
 
 set(
     VT_THREADPOOL_Clang_COMPILE_OPTIONS
+    $<$<BOOL:${VT_ENABLE_WERROR}>:-Werror>
     -pedantic-errors
     -Weverything
     -Wno-c++98-compat
@@ -126,6 +129,7 @@ set(
 
 set(
     VT_THREADPOOL_MSVC_COMPILE_OPTIONS
+    $<$<BOOL:${VT_ENABLE_WERROR}>:/WX>
     /W4
     /volatile:iso
     /Zc:strictStrings
