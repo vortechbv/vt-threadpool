@@ -36,7 +36,7 @@ public:
 #ifdef __cpp_lib_move_only_function
     using function_type = std::move_only_function<void()>;
 #else
-#   pragma message "std::move_only_function unavailable, using std::function"
+#   pragma message("std::move_only_function unavailable, using std::function")
     using function_type = std::function<void()>;
 #endif
 

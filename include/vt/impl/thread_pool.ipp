@@ -28,7 +28,7 @@
 #ifdef __cpp_lib_bind_front
 #   define VT_THREAD_POOL_BIND std::bind_front
 #else
-#   pragma message "std::bind_front unavailable, using std::bind"
+#   pragma message("std::bind_front unavailable, using std::bind")
 #   define VT_THREAD_POOL_BIND std::bind
 #endif
 
