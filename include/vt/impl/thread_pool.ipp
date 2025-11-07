@@ -26,7 +26,15 @@
 
 
 #ifdef __cpp_lib_bind_front
-#   define VT_THREAD_POOL_BIND std::bind_front
+#   if defined(__clang__) && __clang_major__ == 20
+        // For some reason the combination of std::bind_front and
+        // std::packaged_task fails to compile under Clang 20. Clang 19 and
+        // Clang 21 don't have this issue.
+#       pragma message("std::bind_front fails clang-20 builds, using std::bind")
+#       define VT_THREAD_POOL_BIND std::bind
+#   else
+#       define VT_THREAD_POOL_BIND std::bind_front
+#   endif
 #else
 #   pragma message("std::bind_front unavailable, using std::bind")
 #   define VT_THREAD_POOL_BIND std::bind
